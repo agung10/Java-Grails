@@ -4,6 +4,21 @@
 <head>
     <meta name="layout" content="main"/>
     <title>Welcome to Grails</title>
+    <style>
+        .home-hero { max-width: 1100px; margin: 40px auto; padding: 28px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 14px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); }
+        .home-header { display:flex; align-items:center; gap:22px; }
+        .home-logo { background:#111827; padding:16px; border-radius:12px; display:flex; align-items:center; justify-content:center; }
+        .home-title { margin:0; font-size:28px; color:#111827; }
+        .home-subtitle { margin:6px 0 0 0; color:#6b7280; }
+        .home-actions { margin-top: 20px; display:flex; gap:12px; flex-wrap:wrap; }
+        .btn { display:inline-block; padding:10px 16px; border-radius:10px; text-decoration:none; font-weight:600; }
+        .btn-primary { background:#111827; color:#fff; }
+        .btn-secondary { background:#f3f4f6; color:#111827; }
+        .home-grid { margin-top: 26px; display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:16px; }
+        .card { border:1px solid #e5e7eb; border-radius:12px; padding:16px; background:#fafafa; }
+        .card h3 { margin:0 0 8px 0; font-size:16px; color:#374151; }
+        .card p { margin:0; color:#6b7280; }
+    </style>
 </head>
 <body>
 <content tag="nav">
@@ -48,33 +63,37 @@
     </li>
 </content>
 
-<div class="svg" role="presentation">
-    <div class="bg-dark-subtle text-center">
-        <asset:image src="grails-cupsonly-logo-white.svg" class="w-50"/>
-    </div>
-</div>
-
 <div id="content" role="main">
     <div class="container">
-        <section class="row colset-2-its">
-            <h1>Welcome to Grails</h1>
+        <section class="home-hero">
+            <div class="home-header">
+                <div class="home-logo">
+                    <asset:image src="grails-cupsonly-logo-white.svg" style="height:48px; width:auto;"/>
+                </div>
+                <div>
+                    <h1 class="home-title">Selamat Datang di Aplikasi Grails</h1>
+                    <p class="home-subtitle">Mulai kelola data Anda atau jelajahi komponen aplikasi.</p>
+                </div>
+            </div>
 
-            <p>
-                Congratulations, you have successfully started your first Grails application! At the moment
-                this is the default page, feel free to modify it to either redirect to a controller or display
-                whatever content you may choose. Below is a list of controllers that are currently deployed in
-                this application, click on each to execute its default action:
-            </p>
+            <div class="home-actions">
+                <a class="btn btn-primary" href="${createLink(controller:'person', action:'index')}">Kelola Person</a>
+                <a class="btn btn-secondary" href="https://docs.grails.org" target="_blank" rel="noopener">Dokumentasi Grails</a>
+            </div>
 
-            <div id="controllers" role="navigation">
-                <h2>Available Controllers:</h2>
-                <ul>
-                    <g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName } }">
-                        <li class="controller">
-                            <g:link controller="${c.logicalPropertyName}">${c.fullName}</g:link>
-                        </li>
-                    </g:each>
-                </ul>
+            <div class="home-grid">
+                <div class="card">
+                    <h3>Status Aplikasi</h3>
+                    <p>Environment: ${Environment.current.name}, Grails: <g:meta name="info.app.grailsVersion"/></p>
+                </div>
+                <div class="card">
+                    <h3>Kontroler Tersedia</h3>
+                    <ul style="margin:8px 0 0 18px;">
+                        <g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName } }">
+                            <li class="controller"><g:link controller="${c.logicalPropertyName}">${c.fullName}</g:link></li>
+                        </g:each>
+                    </ul>
+                </div>
             </div>
         </section>
     </div>

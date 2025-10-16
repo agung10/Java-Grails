@@ -112,14 +112,36 @@ dataSource:
 
 environments:
     development:
-        dataSource:
-            dbCreate: create-drop
-            url: jdbc:h2:mem:devDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+        # == Menyimpan di memory / default ==
+        # dataSource:
+        #     dbCreate: create-drop
+        #     url: jdbc:h2:mem:devDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
         
-        # == kalau ingin disimpan ke dalam file ==
+        # == Menyimpan ke dalam file ==
         # dataSource:
         #     dbCreate: update
         #     url: jdbc:h2:./devDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+
+        # == Menyimpan ke mysql ==
+        # dataSource:
+        #     driverClassName: com.mysql.cj.jdbc.Driver
+        #     dialect: org.hibernate.dialect.MySQL8Dialect
+        #     dbCreate: update
+        #     username: root
+        #     password: ""
+        #     url: jdbc:mysql://localhost:3306/belajar_grails?useSSL=false&serverTimezone=UTC
+
+        # == Menyimpan ke postgresql ==
+        grails:
+            exceptionresolver:
+                logErrors: true
+        dataSource:
+            driverClassName: org.postgresql.Driver
+            dialect: org.hibernate.dialect.PostgreSQLDialect
+            dbCreate: update
+            username: postgres
+            password: 123321
+            url: jdbc:postgresql://localhost:5432/learn_java_grails
     test:
         dataSource:
             dbCreate: update

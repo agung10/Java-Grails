@@ -7,20 +7,16 @@ import belajar_grails.Person
 class PersonService {
     def store(String nama, Integer umur) {
         def p = new Person(nama: nama, umur: umur)
-        p.save(flush: true)
-        return p
+        if (p.save(flush: true)) {
+            return p
+        } else {
+            p.errors.each { error -> println "Validation Error: ${error}" }
+            return null
+        }
     }
 
     def findById(Long id) {
         return Person.get(id)
-    }
-
-    def findByName(String nama) {
-        return Person.findByNama(nama)
-    }
-
-    def findAllByName(String nama) {
-        return Person.findAllByNamaLike("%${nama}%")
     }
 
     def update(Long id, String nama, Integer umur) {
@@ -41,5 +37,13 @@ class PersonService {
             return true
         }
         return false
+    }
+
+    def findByName(String nama) {
+        return Person.findByNama(nama)
+    }
+
+    def findAllByName(String nama) {
+        return Person.findAllByNamaLike("%${nama}%")
     }
 }
