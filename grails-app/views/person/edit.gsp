@@ -22,9 +22,13 @@
    <div class="container">
       <h1>Edit Person</h1>
       
-      <g:if test="${flash.message}">
-         <div class="message error">${flash.message}</div>
+      <g:if test="${flash.error}">
+         <div class="message error">${flash.error}</div>
       </g:if>
+      <g:if test="${flash.success}">
+         <div class="message success">${flash.success}</div>
+      </g:if>
+      <div id="flashMessage" data-success="${flash.success}" data-error="${flash.error}"style="display: none;"></div>
       
       <div class="form-section">
          <form action="${createLink(action: 'update')}" method="post">
@@ -32,11 +36,13 @@
             
             <div class="form-group">
                <label for="nama">Nama:</label>
-               <input type="text" id="nama" name="nama" value="${person?.nama}">
+               <input type="text" id="nama" name="nama" pattern="^[a-zA-Z\\s]*$" maxlength="200" title="Nama hanya boleh mengandung huruf dan spasi, maksimal 200 karakter" value="${person?.nama}">
+               <small>Hanya huruf dan spasi, maksimal 200 karakter</small>
             </div>
             <div class="form-group">
                <label for="umur">Umur:</label>
-               <input type="number" id="umur" name="umur" value="${person?.umur}" min="1" max="120">
+               <input type="number" id="umur" name="umur" min="1" max="150" title="Umur harus antara 1-150 tahun" value="${person?.umur}">
+               <small>Umur harus antara 1-150 tahun</small>
             </div>
             
             <button type="submit">Ubah Data</button>
@@ -45,4 +51,19 @@
       </div>
    </div>
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+      const flashMessage = document.getElementById('flashMessage');
+      const success = flashMessage.dataset.success;
+      const error = flashMessage.dataset.error;
+
+      if (success) {
+         Swal.fire('Berhasil!', success, 'success');
+      } else if (error) {
+         Swal.fire('Gagal!', error, 'error');
+      }
+   });
+</script>
 </html>

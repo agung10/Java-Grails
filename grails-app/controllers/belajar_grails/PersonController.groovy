@@ -20,30 +20,59 @@ class PersonController {
     def create() {
         try {
             String nama = params.nama?.trim()
-            Integer umur = params.umur as Integer
-
-            if (!nama || nama.isEmpty()) {
-                flash.message = "Nama harus diisi!"
+            String umurStr = params.umur?.trim()
+            
+            if (!nama && !umurStr) {
+                flash.error = "Nama dan Umur harus diisi!"
                 redirect(action: "index")
                 return
             }
             
-            if (!umur || umur <= 0) {
-                flash.message = "Umur harus diisi dan lebih dari 0!"
+            if (!nama) {
+                flash.error = "Nama tidak boleh kosong!"
+                redirect(action: "index")
+                return
+            } else if (!nama.matches("^[a-zA-Z\\s]*\$")) {
+                flash.error = "Nama hanya boleh mengandung huruf dan spasi!"
+                redirect(action: "index")
+                return
+            } else if (nama.length() > 200) {
+                flash.error = "Nama terlalu panjang! Maksimal 200 karakter."
+                redirect(action: "index")
+                return
+            }
+            
+            if (!umurStr) {
+                flash.error = "Umur tidak boleh kosong!"
+                redirect(action: "index")
+                return
+            } else if (!umurStr.matches("^\\d+\$")) {
+                flash.error = "Umur harus berupa angka!"
+                redirect(action: "index")
+                return
+            }
+            
+            // Konversi umur ke Integer setelah memastikan formatnya valid
+            Integer umur = umurStr.toInteger()
+            if (umur < 1) {
+                flash.error = "Umur tidak valid! Harus lebih besar dari 0."
+                redirect(action: "index")
+                return
+            } else if (umur > 150) {
+                flash.error = "Umur tidak valid! Maksimal 150 tahun."
                 redirect(action: "index")
                 return
             }
             
             def person = personService.store(nama, umur)
             if (person) {
-                flash.message = "Data ${person.nama} berhasil disimpan!"
+                flash.success = "Data ${person.nama} berhasil disimpan!"
             } else {
-                flash.message = "Gagal menyimpan data! Periksa kembali inputan Anda."
+                flash.error = "Gagal menyimpan data! Silakan coba lagi."
             }
         } catch (Exception e) {
-            flash.message = "Error: ${e.message}"
-            println "Exception in create: ${e.message}"
-            e.printStackTrace()
+            log.error("Error dalam create: ${e.message}", e)
+            flash.error = "Terjadi kesalahan sistem! Silakan coba beberapa saat lagi."
         }
         
         redirect(action: "index")
@@ -77,11 +106,47 @@ class PersonController {
 
     def update() {
         Long id = params.id as Long
-        String nama = params.nama
-        Integer umur = params.umur as Integer
+        String nama = params.nama?.trim()
+        String umurStr = params.umur?.trim()
         
-        if (!nama || !umur) {
-            flash.message = "Nama dan Umur harus diisi!"
+        if (!nama && !umurStr) {
+            flash.error = "Nama dan Umur harus diisi!"
+            redirect(action: "edit", params: [id: id])
+            return
+        }
+        
+        if (!nama) {
+            flash.error = "Nama tidak boleh kosong!"
+            redirect(action: "edit", params: [id: id])
+            return
+        } else if (!nama.matches("^[a-zA-Z\\s]*\$")) {
+            flash.error = "Nama hanya boleh mengandung huruf dan spasi!"
+            redirect(action: "edit", params: [id: id])
+            return
+        } else if (nama.length() > 200) {
+            flash.error = "Nama terlalu panjang! Maksimal 200 karakter."
+            redirect(action: "edit", params: [id: id])
+            return
+        }
+        
+        if (!umurStr) {
+            flash.error = "Umur tidak boleh kosong!"
+            redirect(action: "edit", params: [id: id])
+            return
+        } else if (!umurStr.matches("^\\d+\$")) {
+            flash.error = "Umur harus berupa angka!"
+            redirect(action: "edit", params: [id: id])
+            return
+        }
+        
+        // Konversi umur ke Integer setelah memastikan formatnya valid
+        Integer umur = umurStr.toInteger()
+        if (umur < 1) {
+            flash.error = "Umur tidak valid! Harus lebih besar dari 0."
+            redirect(action: "edit", params: [id: id])
+            return
+        } else if (umur > 150) {
+            flash.error = "Umur tidak valid! Maksimal 150 tahun."
             redirect(action: "edit", params: [id: id])
             return
         }
@@ -89,10 +154,10 @@ class PersonController {
         def person = personService.update(id, nama, umur)
         
         if (person) {
-            flash.message = "Data ${person.nama} berhasil diupdate!"
+            flash.success = "Data ${person.nama} berhasil diupdate!"
             redirect(action: "index")
         } else {
-            flash.message = "Data gagal diupdate!"
+            flash.error = "Data gagal diupdate!"
             redirect(action: "edit", params: [id: id])
         }
     }
@@ -103,9 +168,9 @@ class PersonController {
         boolean deleted = personService.delete(id)
 
         if (deleted) {
-            flash.message = "Data ${nama} berhasil dihapus!"
+            flash.success = "Data ${nama} berhasil dihapus!"
         } else {
-            flash.message = "Data dengan ID ${id} tidak ditemukan atau gagal dihapus!"
+            flash.error = "Data dengan ID ${id} tidak ditemukan atau gagal dihapus!"
         }
         
         redirect(action: "index")
