@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-   <title>Edit Person</title>
+   <title>Edit Address</title>
    <style>
       body { font-family: Arial, sans-serif; margin: 20px; }
       .container { max-width: 600px; margin: 0 auto; }
@@ -20,7 +20,7 @@
 </head>
 <body>
    <div class="container">
-      <h1>Edit Person</h1>
+      <h1>Edit Address</h1>
       
       <g:if test="${flash.error}">
          <div class="message error">${flash.error}</div>
@@ -32,17 +32,26 @@
       
       <div class="form-section">
          <form action="${createLink(action: 'update')}" method="post">
-            <input type="hidden" name="id" value="${person?.id}">
-            
+            <input type="hidden" name="id" value="${address?.id}">
+
             <div class="form-group">
-               <label for="nama">Nama:</label>
-               <input type="text" id="nama" name="nama" maxlength="200" title="Nama hanya boleh mengandung huruf dan spasi, maksimal 200 karakter" value="${person?.nama}">
-               <small>Hanya huruf dan spasi, maksimal 200 karakter</small>
+               <label>Person:</label>
+               <input type="text" value="${address?.person?.nama}" disabled>
             </div>
             <div class="form-group">
-               <label for="umur">Umur:</label>
-               <input type="number" id="umur" name="umur" min="1" max="150" title="Umur harus antara 1-150 tahun" value="${person?.umur}">
-               <small>Umur harus antara 1-150 tahun</small>
+               <label for="jalan">Alamat Jalan:</label>
+               <input type="text" id="jalan" name="jalan" maxlength="200" value="${address?.jalan}">
+               <small>Maksimal 200 karakter</small>
+            </div>
+            <div class="form-group">
+               <label for="kota">Kota:</label>
+               <input type="text" id="kota" name="kota" maxlength="100" value="${address?.kota}">
+               <small>Maksimal 100 karakter</small>
+            </div>
+            <div class="form-group">
+               <label for="kode_pos">Kode Pos:</label>
+               <input type="text" id="kode_pos" name="kode_pos" pattern="[0-9]{5}" value="${address?.kode_pos}">
+               <small>5 digit angka</small>
             </div>
             
             <button type="submit">Ubah Data</button>

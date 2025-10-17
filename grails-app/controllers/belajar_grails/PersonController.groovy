@@ -12,7 +12,7 @@ class PersonController {
             [persons: persons, total: total]
         } catch (Exception e) {
             log.error("Error in index: ${e.message}", e)
-            flash.message = "Error loading data: ${e.message}"
+            flash.error = "Error loading data: ${e.message}"
             [persons: [], total: 0]
         }
     }
@@ -83,7 +83,7 @@ class PersonController {
         def person = personService.findById(id)
         
         if (!person) {
-            flash.message = "Data dengan ID ${id} tidak ditemukan!"
+            flash.error = "Data dengan ID ${id} tidak ditemukan!"
             redirect(action: "index")
             return
         }
@@ -96,7 +96,7 @@ class PersonController {
         def person = personService.findById(id)
         
         if (!person) {
-            flash.message = "Data dengan ID ${id} tidak ditemukan!"
+            flash.error = "Data dengan ID ${id} tidak ditemukan!"
             redirect(action: "index")
             return
         }

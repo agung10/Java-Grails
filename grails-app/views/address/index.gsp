@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-   <title>Daftar Person</title>
+   <title>Daftar Alamat</title>
    <style>
       body { font-family: Arial, sans-serif; margin: 20px; }
       .container { max-width: 800px; margin: 0 auto; }
@@ -9,7 +9,7 @@
       .data-section { background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
       .form-group { margin-bottom: 15px; }
       label { display: block; margin-bottom: 5px; font-weight: bold; }
-      input[type="text"], input[type="number"] { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 3px; }
+      input[type="text"], input[type="number"], select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 3px; }
       button { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 3px; cursor: pointer; }
       button:hover { background: #0056b3; }
       .message { padding: 10px; margin: 10px 0; border-radius: 3px; }
@@ -24,7 +24,7 @@
 </head>
 <body>
    <div class="container">
-      <h1>Data Person</h1>
+      <h1>Data Alamat</h1>
       
       <g:if test="${flash.error}">
          <div class="message error">${flash.error}</div>
@@ -33,58 +33,72 @@
          <div class="message success">${flash.success}</div>
       </g:if>
       <div id="flashMessage" data-success="${flash.success}" data-error="${flash.error}"style="display: none;"></div>
-      
+
       <div class="form-section">
-         <h2 style="margin-top: 0;">Tambah Person Baru</h2>
+         <h2 style="margin-top: 0;">Tambah Alamat Baru</h2>
          <form action="${createLink(action: 'create')}" method="post">
-            <div class="form-group">
-               <label for="nama">Nama:</label>
-               <input type="text" id="nama" name="nama" maxlength="200" title="Nama hanya boleh mengandung huruf dan spasi, maksimal 200 karakter">
-               <small>Hanya huruf dan spasi, maksimal 200 karakter</small>
-            </div>
-            <div class="form-group">
-               <label for="umur">Umur:</label>
-               <input type="number" id="umur" name="umur" min="1" max="150" title="Umur harus antara 1-150 tahun">
-               <small>Umur harus antara 1-150 tahun</small>
-            </div>
-            <button type="submit">Simpan Data</button>
+               <div class="form-group">
+                  <label for="person_id">Person:</label>
+                  <select id="person_id" name="person_id">
+                     <option value="">Pilih Person</option>
+                     <g:each in="${personList}" var="person">
+                        <option value="${person.id}">${person.nama}</option>
+                     </g:each>
+                  </select>
+               </div>
+               <div class="form-group">
+                  <label for="jalan">Alamat Jalan:</label>
+                  <input type="text" id="jalan" name="jalan" maxlength="200">
+                  <small>Maksimal 200 karakter</small>
+               </div>
+               <div class="form-group">
+                  <label for="kota">Kota:</label>
+                  <input type="text" id="kota" name="kota" maxlength="100">
+                  <small>Maksimal 100 karakter</small>
+               </div>
+               <div class="form-group">
+                  <label for="kode_pos">Kode Pos:</label>
+                  <input type="text" id="kode_pos" name="kode_pos" pattern="[0-9]{5}">
+                  <small>5 digit angka</small>
+               </div>
+               <button type="submit">Simpan Alamat</button>
          </form>
       </div>
-      
+
       <div class="data-section">
-         <h2>Daftar Person (Total: ${total})</h2>
+         <h2>Daftar Alamat (Total: ${total})</h2>
          <g:if test="${total > 0}">
             <table>
                <thead>
                   <tr>
-                     <th class="text-center">ID</th>
-                     <th class="text-center">Nama</th>
-                     <th class="text-center">Umur</th>
-                     <th class="text-center">Tanggal Dibuat</th>
-                     <th class="text-center">Tanggal Diperbarui</th>
+                     <th class="text-center">No</th>
+                     <th class="text-center">Person</th>
+                     <th class="text-center">Alamat</th>
+                     <th class="text-center">Kota</th>
+                     <th class="text-center">Kode Pos</th>
                      <th class="text-center">Aksi</th>
                   </tr>
                </thead>
                <tbody>
-                  <g:each in="${persons}" var="person" status="i">
-                     <tr>
-                        <td class="text-center">${i + 1}</td>
-                        <td>${person.nama}</td>
-                        <td class="text-center">${person.umur} Tahun</td>
-                        <td class="text-center"><g:formatDate date="${person.dateCreated}" format="dd/MM/yyyy HH:mm" /></td>
-                        <td class="text-center"><g:formatDate date="${person.lastUpdated}" format="dd/MM/yyyy HH:mm" /></td>
-                        <td class="text-center">
-                           <g:link action="show" id="${person.id}">Lihat</g:link> | 
-                           <g:link action="edit" id="${person.id}">Edit</g:link> | 
-                           <g:link action="destroy" onclick="confirmDelete('${person.id}', '${person.nama}'); return false;">Hapus</g:link>
-                        </td>
-                     </tr>
+                  <g:each in="${addresses}" var="address" status="i">
+                        <tr>
+                           <td class="text-center">${i + 1}</td>
+                           <td>${address.person.nama}</td>
+                           <td class="text-center">${address.jalan}</td>
+                           <td class="text-center">${address.kota}</td>
+                           <td class="text-center">${address.kode_pos}</td>
+                           <td class="text-center">
+                              <g:link action="show" id="${address.id}">Lihat</g:link> | 
+                              <g:link action="edit" id="${address.id}">Edit</g:link> | 
+                              <g:link action="destroy" onclick="confirmDelete('${address.id}', '${address.jalan?.encodeAsJavaScript()}'); return false;">Hapus</g:link>
+                           </td>
+                        </tr>
                   </g:each>
                </tbody>
             </table>
          </g:if>
          <g:else>
-            <div class="no-data">Belum ada data person. Silakan tambah data baru.</div>
+            <div class="no-data">Belum ada data alamat. Silakan tambah data baru.</div>
          </g:else>
       </div>
    </div>
